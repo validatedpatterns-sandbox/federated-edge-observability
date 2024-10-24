@@ -1,6 +1,6 @@
 ---
 global:
-  pattern: ansible-edge-gitops
+  pattern: federated-open-telemetry
 
   options:
     useCSV: false
