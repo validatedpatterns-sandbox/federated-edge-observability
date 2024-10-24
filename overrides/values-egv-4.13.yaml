@@ -1,2 +1,0 @@
----
-defaultStorageClassName: "ocs-storagecluster-ceph-rbd"
