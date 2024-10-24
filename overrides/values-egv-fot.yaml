@@ -27,7 +27,6 @@ vmDefaults:
       targetPort: 22
 
 vms:
-  kiosk: {}
   edgenode:
     count: 4
     role: edgenode
