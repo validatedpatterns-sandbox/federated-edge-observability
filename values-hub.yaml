@@ -70,6 +70,8 @@ clusterGroup:
       name: aap-config
       project: hub
       path: charts/hub/aap-config
+      extraValueFiles:
+        - '$patternref/overrides/values-aap-config-fot.yaml'
 
     vault:
       name: vault
