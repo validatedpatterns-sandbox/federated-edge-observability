@@ -71,7 +71,7 @@ clusterGroup:
       project: hub
       path: charts/hub/aap-config
       extraValueFiles:
-        - '$patternref/overrides/values-aap-config-fot.yaml'
+        - '$patternref/overrides/values-aap-config-feo.yaml'
 
     vault:
       name: vault
@@ -108,7 +108,7 @@ clusterGroup:
       project: hub
       path: charts/hub/edge-gitops-vms
       extraValueFiles:
-        - '$patternref/overrides/values-egv-fot.yaml'
+        - '$patternref/overrides/values-egv-feo.yaml'
 
   # Only the hub cluster here - managed entities are edge nodes
   managedClusterGroups: []

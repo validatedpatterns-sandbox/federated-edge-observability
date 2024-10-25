@@ -1,6 +1,6 @@
 ---
 global:
-  pattern: federated-open-telemetry
+  pattern: federated-edge-observability
 
   options:
     useCSV: false
