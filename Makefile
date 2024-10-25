@@ -14,9 +14,6 @@ help:
 install upgrade deploy: operator-deploy post-install ## Install or upgrade the pattern via the operator
 	echo "Installed/Upgraded"
 
-#portworx-install portworx-upgrade portworx-deploy: ## Install with portworx instead
-#	EXTRA_HELM_OPTS='-f values-portworx.yaml' make install
-
 post-install: ## Post-install tasks - load-secrets
 	make load-secrets
 	echo "Post-deploy complete"
