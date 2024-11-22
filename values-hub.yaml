@@ -114,7 +114,8 @@ clusterGroup:
       name: edge-gitops-vms
       namespace: edge-gitops-vms
       project: hub
-      path: charts/hub/edge-gitops-vms
+      chart: edge-gitops-vms
+      chartVersion: 0.1.*
       extraValueFiles:
         - '$patternref/overrides/values-egv-feo.yaml'
 
