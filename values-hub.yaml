@@ -15,15 +15,23 @@ clusterGroup:
     aap-operator:
       name: ansible-automation-platform-operator
       namespace: ansible-automation-platform
-      channel: stable-2.4
+      channel: stable-2.5
 
     openshift-virtualization:
       name: kubevirt-hyperconverged
       namespace: openshift-cnv
+      channel: stable
+      annotations:
+        argocd.argoproj.io/sync-wave: "10"
 
     openshift-data-foundation:
       name: odf-operator
       namespace: openshift-storage
+      sequenceJob:
+        resourceType: sc
+        resourceName: ocs-storagecluster-ceph-rbd
+      annotations:
+        argocd.argoproj.io/sync-wave: "5"
 
   projects:
     - hub
@@ -34,21 +42,16 @@ clusterGroup:
         playbook: ansible/deploy_kubevirt_worker.yml
         verbosity: -vvv
       - name: clean-golden-images
-        playbook: ansible/odf_clean_pvcs.yml
-        image: quay.io/hybridcloudpatterns/utility-container:latest
+        playbook: ansible/odf_fix_dataimportcrons.yml
         verbosity: -vvv
-      - name: configure-aap-controller
-        playbook: ansible/imperative_configure_aap.yml
-        image: quay.io/hybridcloudpatterns/utility-container:latest
-        verbosity: -vvv
-        timeout: "900"
     clusterRoleYaml:
       - apiGroups:
           - "*"
         resources:
           - machinesets
-          - persistentvolumeclaims
           - datavolumes
+          - datasources
+          - dataimportcrons
         verbs:
           - "*"
       - apiGroups:
@@ -63,13 +66,17 @@ clusterGroup:
   applications:
     aap:
       name: ansible-automation-platform
+      namespace: ansible-automation-platform
       project: hub
-      path: charts/hub/ansible-automation-platform
+      chart: ansible-automation-platform-instance
+      chartVersion: 0.1.*
 
     aap-config:
       name: aap-config
+      namespace: aap-config
       project: hub
-      path: charts/hub/aap-config
+      chart: aap-config
+      chartVersion: 0.1.*
       extraValueFiles:
         - '$patternref/overrides/values-aap-config-feo.yaml'
 
@@ -91,7 +98,8 @@ clusterGroup:
       name: openshift-cnv
       namespace: openshift-cnv
       project: hub
-      path: charts/hub/cnv
+      chart: openshift-virtualization-instance
+      chartVersion: 0.1.*
 
     odf:
       name: odf

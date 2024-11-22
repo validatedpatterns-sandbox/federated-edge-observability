@@ -1,2 +1,4 @@
-configAsCode:
-  repo: https://github.com/validatedpatterns-demos/federated-edge-observability-config-as-code.git
+---
+agof:
+  iac_repo: https://github.com/validatedpatterns-demos/federated-edge-observability-config-as-code.git
+  iac_revision: main
