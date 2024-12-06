@@ -125,7 +125,7 @@ clusterGroup:
       name: edge-observability-stack
       namespace: edge-observability-stack
       project: hub
-      repoURL: https://github.com/jpaulrajredhat/edge-observability-stack
+      repoURL: https://github.com/validatedpatterns-demos/edge-observability-stack
       chartVersion: main
       path: "."
 
