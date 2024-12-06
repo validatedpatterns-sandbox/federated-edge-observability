@@ -11,6 +11,7 @@ clusterGroup:
     - openshift-cnv
     - openshift-storage
     - edge-gitops-vms
+    - edge-observability-stack
 
   subscriptions:
     aap-operator:
@@ -119,6 +120,14 @@ clusterGroup:
       chartVersion: 0.1.*
       extraValueFiles:
         - '$patternref/overrides/values-egv-feo.yaml'
+
+    edge-observability-stack:
+      name: edge-observability-stack
+      namespace: edge-observability-stack
+      project: hub
+      repoURL: https://github.com/jpaulrajredhat/edge-observability-stack
+      chartVersion: main
+      path: "."
 
   # Only the hub cluster here - managed entities are edge nodes
   managedClusterGroups: []
