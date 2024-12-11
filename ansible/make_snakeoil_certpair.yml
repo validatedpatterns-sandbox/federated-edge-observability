@@ -51,7 +51,7 @@
             echo "Snakeoil certpair $certname already exists, not re-creating"
         else
             openssl req -x509 -newkey rsa:4096 -sha256 -days 365 \
-                -nodes -keyout "$key_path" -out "$cert_path" -subj "/CN=$certname" \
+                -nodes -keyout "$key_path" -out "$cert_path" -subj "/CN=${certname:0:63}" \
                 -addext "subjectAltName=DNS:$name.$domain"
         fi
 

@@ -13,10 +13,14 @@ install upgrade deploy: operator-deploy post-install ## Install or upgrade the p
 	echo "Installed/Upgraded"
 
 post-install: ## Post-install tasks - load-secrets
+	make snakeoil-certs
 	make load-secrets
 	echo "Post-deploy complete"
 
 deploy-kubevirt-worker: ## Deploy the metal node worker (from workstation). This is normally done in-cluster
 	./scripts/deploy_kubevirt_worker.sh
+
+snakeoil-certs: ## Create self-signed certificates if they do not already exist
+	ansible-playbook $(EXTRA_PLAYBOOK_OPTS) ./ansible/make_snakeoil_certpair.yml -e '{ "certificate_names": [ "otel-collector-edge-observability-stack" ] }'
 
 .phony: install test
