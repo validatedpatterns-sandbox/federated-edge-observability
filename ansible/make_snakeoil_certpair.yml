@@ -1,0 +1,63 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Create self-signed TLS certs
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+    certificate_names: []
+    pattern: ""
+    domain: ""
+  tasks:
+    - name: Determine pattern name
+      when: pattern | length == 0
+      block:
+        - name: Discover pattern name
+          ansible.builtin.shell: |
+            yq '.global.pattern' "../values-global.yaml" 2>/dev/null
+          register: pattern_cmd
+          changed_when: false
+
+        - name: Set pattern name
+          ansible.builtin.set_fact:
+            pattern: "{{ pattern_cmd.stdout }}"
+
+    - name: Determine domain name
+      when: domain | length == 0
+      block:
+        - name: Discover domain name
+          ansible.builtin.shell: |
+            oc get ingresses.config/cluster -o jsonpath={.spec.domain}
+          register: domain_cmd
+          changed_when: false
+
+        - name: Set doamin name
+          ansible.builtin.set_fact:
+            domain: "{{ domain_cmd.stdout }}"
+
+    - name: Run command to create certificates
+      ansible.builtin.shell: |
+        set -eu
+
+        name="{{ certname }}"
+        pattern="{{ pattern }}"
+        domain="{{ domain }}"
+
+        certname="$pattern-$name"
+        cert_path="$HOME/$pattern-$name.crt"
+        key_path="$HOME/$pattern-$name.key"
+
+        if [[ -f "$cert_path" && -f "$key_path" ]]; then
+            echo "Snakeoil certpair $certname already exists, not re-creating"
+        else
+            openssl req -x509 -newkey rsa:4096 -sha256 -days 365 \
+                -nodes -keyout "$key_path" -out "$cert_path" -subj "/CN=$certname" \
+                -addext "subjectAltName=DNS:$name.$domain"
+        fi
+
+        echo "Key Path: $key_path"
+        echo "Cert Path: $cert_path"
+      loop: "{{ certificate_names }}"
+      loop_control:
+        loop_var: certname
+        label: "{{ pattern }}-{{ certname }}"
